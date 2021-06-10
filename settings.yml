@@ -61,7 +61,6 @@ system:
   #   true
   #Generate public ports for the docker image
   ports:
-    # http:
-    #   SERVER_PORT
+    http:
     others:
       MONGODB_PORT
