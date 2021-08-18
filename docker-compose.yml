@@ -7,6 +7,4 @@ services:
     volumes:
       - '${DATA_PATH_HOST}/mongo:/data/db'
       - '${DATA_PATH_HOST}/mongo_config:/data/configdb'
-volumes:
-  mongo:
-    driver: '${VOLUMES_DRIVER}'
+volumes: {}
