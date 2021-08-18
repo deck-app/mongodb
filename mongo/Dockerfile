@@ -1,4 +1,4 @@
-FROM mongo:latest
+FROM --platform=linux/x86_64 mongo:latest
 
 LABEL maintainer="Mahmoud Zalt <mahmoud@zalt.me>"
 

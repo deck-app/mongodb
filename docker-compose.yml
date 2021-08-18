@@ -1,12 +1,12 @@
-version: "3"
+version: '3'
 services:
   mongo:
-    build: "./mongo"
+    build: './mongo'
     ports:
-      - "${MONGODB_PORT}:27017"
+      - '${MONGODB_PORT}:27017'
     volumes:
-      - "${DATA_PATH_HOST}/mongo:/data/db"
-      - "${DATA_PATH_HOST}/mongo_config:/data/configdb"
+      - '${DATA_PATH_HOST}/mongo:/data/db'
+      - '${DATA_PATH_HOST}/mongo_config:/data/configdb'
 volumes:
   mongo:
-    driver: "${VOLUMES_DRIVER}"
+    driver: '${VOLUMES_DRIVER}'
