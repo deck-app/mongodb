@@ -29,6 +29,10 @@ jobs:
         DATA_PATH_HOST: /tmp/mongo
     - name: MongoDB Version check
       run: docker exec mongodb_mongo_1 mongo | grep MongoDB
+    - name: Destroy container and file
+      run:  |
+        docker-compose down
+        echo "y" | docker image prune -a
   #   - name: Mongodb driver check
   #     run:  docker exec laravel_laravel_1 php -m | grep mongo
   #   - name: Mysql Driver check
