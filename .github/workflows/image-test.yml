@@ -18,7 +18,9 @@ jobs:
       env:
         DATA_PATH_HOST: /tmp/mongo
     - name: Show mongodb DB
-      run:  docker exec mongodb_mongo_1 mongo -e show dbs;
+      run:  |
+        docker-compose ps
+        docker exec mongodb_mongo_1 mongo -e "show dbs"
   #   - name: Mongodb driver check
   #     run:  docker exec laravel_laravel_1 php -m | grep mongo
   #   - name: Mysql Driver check
