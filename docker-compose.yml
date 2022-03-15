@@ -16,9 +16,4 @@ services:
     volumes:
       - '${DATA_PATH_HOST}/mongo:/data/db'
       - '${DATA_PATH_HOST}/mongo_config:/data/configdb'
-  mongo-client:
-    build: 
-      context: './mongoclient'
-    ports:
-      - '${MONGODB_CLIENT_PORT}:8000'
 volumes: {}

@@ -1,4 +1,4 @@
-var db = connect("mongodb://{MONGO_INITDB_ROOT_USERNAME}:{MONGO_INITDB_ROOT_PASSWORD}@localhost:27017/?authSource=admin");
+var db = connect("mongodb://root:example@localhost:27017/?authSource=admin");
 
 db = db.getSiblingDB('{MONGO_INITDB_DATABASE}');
 db.createUser(
