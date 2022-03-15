@@ -13,6 +13,4 @@ system:
   #Generate public ports for the docker image
   ports:
     http:
-      MONGODB_CLIENT_PORT
-    others:
       - MONGODB_PORT
