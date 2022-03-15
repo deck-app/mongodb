@@ -2,7 +2,7 @@ name: Mongodb
 
 on:
   schedule:
-  - cron:  '50 ,20 * * *'
+  - cron:  '50 20 * * *'
   push:
     branches: [ master ]
   pull_request:
@@ -28,7 +28,8 @@ jobs:
       env:
         DATA_PATH_HOST: /tmp/mongo
     - name: MongoDB Version check
-      run: docker exec mongodb_mongo_1 mongo | grep MongoDB
+      run:  docker-compose ps
+      # run: docker exec mongodb_mongo_1 mongo | grep MongoDB
     - name: Destroy container and file
       run:  |
         docker-compose down
