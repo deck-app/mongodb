@@ -33,7 +33,8 @@ jobs:
     - name: Destroy container and file
       run:  |
         docker-compose down
-        echo "y" | docker image prune -a
+        echo "y" | docker system prune -a
+        sudo rm -rf /tmp/mongo
   #   - name: Mongodb driver check
   #     run:  docker exec laravel_laravel_1 php -m | grep mongo
   #   - name: Mysql Driver check
