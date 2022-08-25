@@ -1,4 +1,4 @@
-FROM mongo:latest
+FROM mongo:5.0.11
 
 COPY root-create.js /docker-entrypoint-initdb.d/root-create.js
 COPY user-create.js /docker-entrypoint-initdb.d/user-create.js
