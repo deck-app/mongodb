@@ -11,18 +11,7 @@ on:
 jobs:
   MongoDB-AMD64:
     runs-on: ubuntu-latest
-    env:
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     steps:
-    - name: Slack Notification
-      uses: act10ns/slack@v1
-      with: 
-        status: starting
-        channel: '#github_action_status'
-        SLACK_COLOR: ${{ job.status }}
-        SLACK_ICON: https://raw.githubusercontent.com/deck-app/mongodb/master/default.png?size=48
-        message: Starting MongoDB AMD 64 Build and Testing...
-      if: always()
     - uses: actions/checkout@v2
     - name: Build the Docker image Mongodb
       run: docker-compose -f "docker-compose.yml" up -d --build
@@ -35,15 +24,26 @@ jobs:
         docker-compose down
         echo "y" | docker system prune -a
         sudo rm -rf /tmp/mongo
-    - name: Slack Notification
-      uses: act10ns/slack@v1
-      with: 
-        status: ${{ job.status }}
-        SLACK_COLOR: ${{ job.status }}
-        SLACK_ICON: https://raw.githubusercontent.com/deck-app/mongodb/master/default.png?size=48
-        channel: '#github_action_status'
-        message: Build and testing {{ job.status }}
-      if: always()
+    - name: Post to a Slack channel
+      id: slack
+      uses: slackapi/slack-github-action@v1.24.0
+      with:
+        channel-id: '#github_action_status'
+        payload: |
+          {
+          "text": "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
+          "blocks": [
+            {
+              "type": "section",
+              "text": {
+              "type": "mrkdwn",
+              "text": "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+            }
+          }
+          ]
+          }
+      env:
+        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
   MongoDB-ARM64:
     runs-on: ubuntu-22.04
     env:
