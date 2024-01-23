@@ -30,7 +30,7 @@ jobs:
         SLACK_CHANNEL: github_action_status
         SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
         SLACK_ICON: https://github.com/rtCamp.png?size=48
-        SLACK_MESSAGE: 'Post Content :rocket:'
+        SLACK_MESSAGE: 'Post Content AMD64 :rocket:'
         SLACK_TITLE: Post Title
         SLACK_USERNAME: rtCamp
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -41,15 +41,6 @@ jobs:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     name: MongoDB-ARM64
     steps:
-      - name: Slack Notification
-        uses: act10ns/slack@v1
-        with: 
-          status: starting
-          channel: '#github_action_status'
-          SLACK_COLOR: ${{ job.status }}
-          SLACK_ICON: https://raw.githubusercontent.com/deck-app/mongodb/master/default.png?size=48
-          message: Starting MongoDB ARM 64 Build and Testing...
-        if: always()
       - uses: actions/checkout@v4
       - uses: uraimo/run-on-arch-action@v2
         name: Run commands
@@ -83,11 +74,13 @@ jobs:
           echo "y" | docker system prune -a
           sudo rm -rf /tmp/mongo
       - name: Slack Notification
-        uses: act10ns/slack@v1
-        with: 
-          status: ${{ job.status }}
-          SLACK_COLOR: ${{ job.status }}
-          SLACK_ICON: https://raw.githubusercontent.com/deck-app/mongodb/master/default.png?size=48
-          channel: '#github_action_status'
-          message: Build and testing {{ job.status }}
-        if: always()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_CHANNEL: github_action_status
+          SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
+          SLACK_ICON: https://github.com/rtCamp.png?size=48
+          SLACK_MESSAGE: 'Post Content ARM64 :rocket:'
+          SLACK_TITLE: Post Title
+          SLACK_USERNAME: rtCamp
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
