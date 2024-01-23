@@ -29,7 +29,6 @@ jobs:
       env:
         DATA_PATH_HOST: /tmp/mongo
     - name: MongoDB Version check
-      # run:  docker-compose ps
       run: docker exec mongodb_mongo_1 mongo | grep MongoDB
     - name: Destroy container and file
       run:  |
@@ -82,17 +81,16 @@ jobs:
         run: |
           echo "The uname output was ${{ steps.runcmd.outputs.uname }}"
       - name: Build the Docker image Mongodb
-      run: docker-compose -f "docker-compose.yml" up -d --build
-      env:
-        DATA_PATH_HOST: /tmp/mongo
-    - name: MongoDB Version check
-      # run:  docker-compose ps
-      run: docker exec mongodb_mongo_1 mongo | grep MongoDB
-    - name: Destroy container and file
-      run:  |
-        docker-compose down
-        echo "y" | docker system prune -a
-        sudo rm -rf /tmp/mongo
+        run: docker-compose -f "docker-compose.yml" up -d --build
+        env:
+          DATA_PATH_HOST: /tmp/mongo
+      - name: MongoDB Version check
+        run: docker exec mongodb_mongo_1 mongo | grep MongoDB
+      - name: Destroy container and file
+        run:  |
+          docker-compose down
+          echo "y" | docker system prune -a
+          sudo rm -rf /tmp/mongo
       - name: Slack Notification
         uses: act10ns/slack@v1
         with: 
