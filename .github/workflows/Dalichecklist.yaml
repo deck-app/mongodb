@@ -24,41 +24,15 @@ jobs:
         docker-compose down
         echo "y" | docker system prune -a
         sudo rm -rf /tmp/mongo
-    - name: Post to a Slack channel
-      id: slack
-      uses: slackapi/slack-github-action@v1.24.0
-      with:
-        channel-id: '#github_action_status'
-        payload: |
-          {
-            "blocks": [
-              { "type": "divider" },
-              {
-                "type": "image",
-                "title": {
-                  "type": "plain_text",
-                  "text": "Slack Slack Slack",
-                  "emoji": true
-                },
-                "image_url": "https://media.makeameme.org/created/a-slack-this.jpg",
-                "alt_text": "marg"
-              },
-              {
-                "type": "actions",
-                "elements": [
-                  {
-                    "type": "button",
-                    "text": {
-                      "type": "plain_text",
-                      "text": "${{ github.sha }}"
-                    },
-                    "url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-                  }
-                ]
-              }
-            ],
-          }
+    - name: Slack Notification
+      uses: rtCamp/action-slack-notify@v2
       env:
+        SLACK_CHANNEL: github_action_status
+        SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
+        SLACK_ICON: https://github.com/rtCamp.png?size=48
+        SLACK_MESSAGE: 'Post Content :rocket:'
+        SLACK_TITLE: Post Title
+        SLACK_USERNAME: rtCamp
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
   MongoDB-ARM64:
     runs-on: ubuntu-22.04
