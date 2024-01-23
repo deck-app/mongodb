@@ -31,16 +31,32 @@ jobs:
         channel-id: '#github_action_status'
         payload: |
           {
-          "text": "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
-          "blocks": [
-            {
-              "type": "section",
-              "text": {
-              "type": "mrkdwn",
-              "text": "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
-            }
-          }
-          ]
+            "blocks": [
+              { "type": "divider" },
+              {
+                "type": "image",
+                "title": {
+                  "type": "plain_text",
+                  "text": "Slack Slack Slack",
+                  "emoji": true
+                },
+                "image_url": "https://media.makeameme.org/created/a-slack-this.jpg",
+                "alt_text": "marg"
+              },
+              {
+                "type": "actions",
+                "elements": [
+                  {
+                    "type": "button",
+                    "text": {
+                      "type": "plain_text",
+                      "text": "${{ github.sha }}"
+                    },
+                    "url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                  }
+                ]
+              }
+            ],
           }
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
