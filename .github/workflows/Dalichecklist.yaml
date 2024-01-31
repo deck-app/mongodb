@@ -24,17 +24,38 @@ jobs:
         docker-compose down
         echo "y" | docker system prune -a
         sudo rm -rf /tmp/mongo
-    - name: Slack Notification
-      uses: rtCamp/action-slack-notify@v2
-      env:
-        SLACK_CHANNEL: github_action_status
-        SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
-        SLACK_ICON: https://github.com/rtCamp.png?size=48
-        SLACK_MESSAGE: 'Post Content AMD64 :rocket:'
-        SLACK_TITLE: Post Title
-        SLACK_USERNAME: rtCamp
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    - name: Create ENV
+        env:
+          ENV_TEST: ${{ secrets.ENV_TEST }}
+        run: |
+          echo "$ENV_TEST" > .env.test
+        shell: bash
+      - name: Notify on SUCCESS
+        if: ${{ SUCCESS() }}
+        uses: ravsamhq/notify-slack-action@v2
+        with:
+          status: ${{ job.status }}
+          notification_title: "{workflow} has {status_message}"
+          message_format: "{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>"
+          footer: "Linked Repo <{repo_url}|{repo}>" 
+          mention_users: "U056E1KTCTG,"
+          mention_users_when: "SUCCESS"
+          mention_groups: "C06H0SB11JL, !github_action_success"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_SUCCESS }}
+      - name: Notify on FAIL
+        if: ${{ failure() }}
+        uses: ravsamhq/notify-slack-action@v2
+        with:
+          status: ${{ job.status }}
+          notification_title: "{workflow} has {status_message}"
+          message_format: "{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>"
+          footer: "Linked Repo <{repo_url}|{repo}>"
+          mention_users: "U056E1KTCTG"
+          mention_users_when: "failure,warnings"
+          mention_groups: "C06G95T1YH3,!github_action_failure"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_FAIL }}
   MongoDB-ARM64:
     runs-on: ubuntu-22.04
     env:
@@ -48,18 +69,11 @@ jobs:
         with:
           arch: aarch64
           distro: ubuntu22.04
-
-          # Not required, but speeds up builds by storing container images in
-          # a GitHub package registry.
-         # githubToken: ${{ github.token }}
-
-          # Set an output parameter `uname` for use in subsequent steps
           run: |
             uname -a
             echo ::set-output name=uname::$(uname -a)
 
       - name: Get the output
-        # Echo the `uname` output parameter from the `runcmd` step
         run: |
           echo "The uname output was ${{ steps.runcmd.outputs.uname }}"
       - name: Build the Docker image Mongodb
@@ -73,14 +87,35 @@ jobs:
           docker-compose down
           echo "y" | docker system prune -a
           sudo rm -rf /tmp/mongo
-      - name: Slack Notification
-        uses: rtCamp/action-slack-notify@v2
+      - name: Create ENV
         env:
-          SLACK_CHANNEL: github_action_status
-          SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
-          SLACK_ICON: https://github.com/rtCamp.png?size=48
-          SLACK_MESSAGE: 'Post Content ARM64 :rocket:'
-          SLACK_TITLE: Post Title
-          SLACK_USERNAME: rtCamp
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          ENV_TEST: ${{ secrets.ENV_TEST }}
+        run: |
+          echo "$ENV_TEST" > .env.test
+        shell: bash
+      - name: Notify on SUCCESS
+        if: ${{ SUCCESS() }}
+        uses: ravsamhq/notify-slack-action@v2
+        with:
+          status: ${{ job.status }}
+          notification_title: "{workflow} has {status_message}"
+          message_format: "{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>"
+          footer: "Linked Repo <{repo_url}|{repo}>" 
+          mention_users: "U056E1KTCTG,"
+          mention_users_when: "SUCCESS"
+          mention_groups: "C06H0SB11JL, !github_action_success"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_SUCCESS }}
+      - name: Notify on FAIL
+        if: ${{ failure() }}
+        uses: ravsamhq/notify-slack-action@v2
+        with:
+          status: ${{ job.status }}
+          notification_title: "{workflow} has {status_message}"
+          message_format: "{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>"
+          footer: "Linked Repo <{repo_url}|{repo}>"
+          mention_users: "U056E1KTCTG"
+          mention_users_when: "failure,warnings"
+          mention_groups: "C06G95T1YH3,!github_action_failure"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_FAIL }}
